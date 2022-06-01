@@ -21,9 +21,9 @@ Should serve as a testing ground for systems with AMQP communications.
 
 ### Install
 
-> :warn: This assumes `Docker` and `Docker-compose` are already installed in the system
+> :warning: This assumes `Docker` and `Docker-compose` are already installed in the system
 
-> :warn: This assumes you are running on `Linux x86_64`
+> :warning: This assumes you are running on `Linux x86_64`
 
 
 1. Install [minikube](https://minikube.sigs.k8s.io/docs/)
