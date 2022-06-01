@@ -1,0 +1,35 @@
+version: "3.8"
+  
+services:
+  publisher:
+    image: registry.melior.ai/maipy:latest
+    network_mode: host
+    command:
+      - publish
+      - -q
+      - maipy-test-q
+      - -x
+      - -t
+      - xchange-test
+    depends_on:
+      - rabbit
+
+  consumer:
+    image: registry.melior.ai/maipy:latest
+    network_mode: host
+    command:
+      - consume
+      - -q
+      - maipy-test-q
+      - -x
+      - -t
+      - xchange-test
+    depends_on:
+    - rabbit  
+
+  rabbit:
+    image: rabbitmq:3-management
+    network_mode: "host"
+    ports:
+      - 8080:15672
+      - 5672:5672

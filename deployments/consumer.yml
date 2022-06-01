@@ -1,0 +1,51 @@
+# consumer
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: consumer
+  name: consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer
+  template:
+    metadata:
+      labels:
+        app: consumer
+      name: consumer
+    spec:
+      hostname: consumer
+      # Docker containers
+      containers:
+      - name: consumer
+        image: registry.melior.ai/maipy:0.3.6
+        # ports: []
+        args:
+          - consume
+          - --amqp_uri
+          - rabbit
+          - -q
+          - maipy-test-q
+          - -x
+          - -t
+          - xchange-test
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: consumer
+  name: consumer
+spec:
+  selector:
+    app: consumer
+  ports:
+  - port: 9999
+    protocol: TCP
+    targetPort: 9999
+status:
+  loadBalancer: {}

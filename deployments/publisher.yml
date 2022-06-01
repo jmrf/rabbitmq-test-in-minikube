@@ -1,0 +1,53 @@
+# publisher
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: publisher
+  name: publisher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: publisher
+  template:
+    metadata:
+      labels:
+        app: publisher
+      name: publisher
+    spec:
+      hostname: publisher
+      # Docker containers
+      containers:
+      - name: publisher
+        image: registry.melior.ai/maipy:0.3.6
+        # ports: []
+        args:
+          - publish
+          - -p
+          - "15"
+          - --amqp_uri
+          - rabbit
+          - -q
+          - maipy-test-q
+          - -x
+          - -t
+          - xchange-test
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: publisher
+  name: publisher
+spec:
+  selector:
+    app: publisher
+  ports:
+  - port: 9999
+    protocol: TCP
+    targetPort: 9999
+status:
+  loadBalancer: {}

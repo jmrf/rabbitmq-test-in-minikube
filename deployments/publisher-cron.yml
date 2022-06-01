@@ -1,0 +1,41 @@
+
+# Sharepoint Watcher
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: publisher-cron
+  labels:
+    app: publisher-cron
+spec:
+  # Schedule info at:
+  # https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
+  # Schedule tool at:
+  # https://crontab.guru/
+  schedule: "0 */5 * * *" # At 00:00:00 on Sunday
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          # Docker containers
+          containers:
+          - name: publisher-cron
+            image: registry.melior.ai/maipy:0.3.6
+            imagePullPolicy: IfNotPresent
+            args:
+              - publish
+              - -p
+              - "15"
+              - --amqp_uri
+              - rabbit
+              - -q
+              - maipy-test-q
+              - -x
+              - -t
+              - xchange-test
+
+            volumeMounts: []
+
+          volumes: []
+          imagePullSecrets: []
+          restartPolicy: Never
